@@ -18,17 +18,24 @@ let users = new Users();
 
 app.use(express.static(publicPath));
 
+app.get('/rooms', (req, res) => {
+  res.status(200).send(users.getRoomsList());
+});
+
 io.on('connection', (socket) => {
-  console.log('New user connected');
 
   socket.on('join', (params, callback) => {
-    console.log(params);
     let usersInRoom = users.getUserList(params.room);
-    if (!isRealString(params.name) || !isRealString(params.room)) {
+
+    if (!isRealString(params.name) || !isRealString(params.room) && !params.activeRoom) {
       return callback('Name and room name are required.');
     }
-    if (!_.indexOf(usersInRoom, params.name)) {
-      return callback('Name already in use. Please choose something else.');
+
+    if(params.activeRoom && !isRealString(params.room)) {
+      params.room = params.activeRoom;
+    }
+    if( !users.isUniqueUser(params.name, params.room)) {
+      return callback('A user with the same name exists in the room.');
     }
 
     socket.join(params.room);

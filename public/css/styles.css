@@ -38,6 +38,24 @@ button:disabled {
     background: #698ea5;
 }
 
+select {
+    height: 40px;
+    background-color: white;
+    color: #2c5f81;
+}
+
+.or-container {
+    text-align: center;
+}
+.or-span {
+    padding: 11px;
+    border-radius: 50%;
+    background-color: #559fbf;
+    color: white;
+    width: 43px;
+    display: inline-block;
+}
+
 .centered-form {
     display: flex;
     align-items: center;
