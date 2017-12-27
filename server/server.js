@@ -2,6 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
+const _ = require('lodash');
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 const {isRealString} = require('./utils/validation');
@@ -22,8 +23,12 @@ io.on('connection', (socket) => {
 
   socket.on('join', (params, callback) => {
     console.log(params);
+    let usersInRoom = users.getUserList(params.room);
     if (!isRealString(params.name) || !isRealString(params.room)) {
       return callback('Name and room name are required.');
+    }
+    if (!_.indexOf(usersInRoom, params.name)) {
+      return callback('Name already in use. Please choose something else.');
     }
 
     socket.join(params.room);
